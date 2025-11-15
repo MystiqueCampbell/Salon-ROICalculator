@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taskless Automations - Nail Salon Pricing Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            background: linear-gradient(135deg, #00d4ff 0%, #0066ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #8b93b8;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+        }
+        
+        .input-section {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .input-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #00d4ff;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+        
+        input {
+            width: 100%;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1.2em;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #00d4ff;
+            background: rgba(0, 0, 0, 0.5);
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .option-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+        
+        .option-card:hover {
+            transform: translateY(-5px);
+            border-color: #00d4ff;
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
+        }
+        
+        .option-title {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            color: #00d4ff;
+            font-weight: bold;
+        }
+        
+        .option-subtitle {
+            color: #8b93b8;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+        }
+        
+        .cost-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .cost-label {
+            color: #b8c1e8;
+        }
+        
+        .cost-value {
+            font-weight: 600;
+            color: #fff;
+        }
+        
+        .total-row {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid #00d4ff;
+        }
+        
+        .total-row .cost-label {
+            color: #00d4ff;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        
+        .total-row .cost-value {
+            color: #00d4ff;
+            font-weight: bold;
+            font-size: 1.3em;
+        }
+        
+        .comparison-section {
+            background: rgba(0, 212, 255, 0.1);
+            border: 2px solid #00d4ff;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+        
+        .comparison-title {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #00d4ff;
+        }
+        
+        .comparison-item {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .savings {
+            color: #00ff88;
+            font-weight: bold;
+        }
+        
+        .roi-section {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+        
+        .roi-title {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: #00d4ff;
+        }
+        
+        .roi-stat {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .roi-label {
+            font-size: 1.1em;
+            color: #b8c1e8;
+        }
+        
+        .roi-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #00ff88;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💅 Nail Salon Pricing Calculator</h1>
+        <p class="subtitle">Calculate your salon's costs and ROI instantly</p>
+        
+        <div class="input-section">
+            <h2 style="color: #00d4ff; margin-bottom: 20px;">Salon Information</h2>
+            
+            <div class="input-group">
+                <label>Missed Calls Per Week</label>
+                <input type="number" id="missedCalls" value="10" min="0">
+            </div>
+            
+            <div class="input-group">
+                <label>Average Service Value ($)</label>
+                <input type="number" id="serviceValue" value="60" min="0">
+            </div>
+            
+            <div class="input-group">
+                <label>Booking Conversion Rate (%)</label>
+                <input type="number" id="conversionRate" value="50" min="0" max="100">
+            </div>
+        </div>
+        
+        <div class="roi-section">
+            <h2 class="roi-title">📊 Monthly Revenue Loss</h2>
+            <div class="roi-stat">
+                <span class="roi-label">Total Missed Calls/Month:</span>
+                <span class="roi-value" id="totalMissedMonthly">40</span>
+            </div>
+            <div class="roi-stat">
+                <span class="roi-label">Potential Bookings Lost:</span>
+                <span class="roi-value" id="lostBookings">20</span>
+            </div>
+            <div class="roi-stat">
+                <span class="roi-label">Estimated Lost Revenue:</span>
+                <span class="roi-value" id="lostRevenue">$1,200</span>
+            </div>
+            <div class="roi-stat">
+                <span class="roi-label">Annual Lost Revenue:</span>
+                <span class="roi-value" id="annualLost">$14,400</span>
+            </div>
+        </div>
+        
+        <h2 style="color: #00d4ff; margin: 40px 0 20px 0; text-align: center; font-size: 2em;">Pricing Options</h2>
+        
+        <div class="results-grid">
+            <!-- Option 1: Premium -->
+            <div class="option-card">
+                <div class="option-title">💎 Premium</div>
+                <div class="option-subtitle">Best long-term value</div>
+                
+                <div class="cost-item">
+                    <span class="cost-label">Setup Fee:</span>
+                    <span class="cost-value">$497</span>
+                </div>
+                <div class="cost-item">
+                    <span class="cost-label">Monthly Fee:</span>
+                    <span class="cost-value">$297</span>
+                </div>
+                <div class="cost-item">
+                    <span class="cost-label">Month 1 Total:</span>
+                    <span class="cost-value">$794</span>
+                </div>
+                <div class="cost-item">
+                    <span class="cost-label">Months 2-12:</span>
+                    <span class="cost-value">$3,267</span>
+                </div>
+                
+                <div class="cost-item total-row">
+                    <span class="cost-label">Year 1 Total:</span>
+                    <span class="cost-value">$4,061</span>
+                </div>
+                
+                <div class="cost-item">
+                    <span class="cost-label">Year 2 Total:</span>
+                    <span class="cost-value">$3,564</span>
+                </div>
+                
+                <div class="cost-item">
+                    <span class="cost-label">Bookings Needed to Break Even (Year 1):</span>
+                    <span class="cost-value" id="premiumBreakeven">78</span>
+                </div>
+                
+                <div class="cost-item">
+                    <span class="cost-label">Months to Break Even:</span>
+                    <span class="cost-value" id="premiumMonths">4.0</span>
+                </div>
+            </div>
+            
+            <!-- Option 2: No Setup -->
+            <div class="option-card">
+                <div class="option-title">🚀 No Money Down</div>
+                <div class="option-subtitle">Easiest to start</div>
+                
+                <div class="cost-item">
+                    <span class="cost-label">Setup Fee:</span>
+                    <span class="cost-value">$0</span>
+                </div>
+                <div class="cost-item">
+                    <span class="cost-label">Monthly Fee:</span>
+                    <span class="cost-value">$447</span>
+                </div>
+                <div class="cost-item">
+                    <span class="cost-label">Month 1 Total:</span>
+                    <span class="cost-value">$447</span>
+                </div>
+                <div class="cost-item">
+                    <span class="cost-label">Months 2-12:</span>
+                    <span class="cost-value">$4,917</span>
+                </div>
+                
+                <div class="cost-item total-row">
+                    <span class="cost-label">Year 1 Total:</span>
+                    <span class="cost-value">$5,364</span>
+                </div>
+                
+                <div class="cost-item">
+                    <span class="cost-label">Year 2 Total:</span>
+                    <span class="cost-value">$5,364</span>
+                </div>
+                
+                <div class="cost-item">
+                    <span class="cost-label">Bookings Needed to Break Even (Year 1):</span>
+                    <span class="cost-value" id="noSetupBreakeven">89</span>
+                </div>
+                
+                <div class="cost-item">
+                    <span class="cost-label">Months to Break Even:</span>
+                    <span class="cost-value" id="noSetupMonths">4.5</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="comparison-section">
+            <h2 class="comparison-title">💡 Savings Comparison</h2>
+            
+            <div class="comparison-item">
+                <strong>Premium vs No Money Down (Year 1):</strong><br>
+                Save <span class="savings" id="premiumVsNoSetup">$703</span> by choosing Premium
+            </div>
+            
+            <div class="comparison-item">
+                <strong>Premium vs No Money Down (Year 2):</strong><br>
+                Save <span class="savings" id="premiumVsNoSetupY2">$1,200</span> by choosing Premium
+            </div>
+            
+            <div class="comparison-item">
+                <strong>No Money Down - Extra Monthly Cost:</strong><br>
+                Paying <span class="savings">$100/month more</span> compared to Premium to avoid upfront cost
+            </div>
+            
+            <div class="comparison-item">
+                <strong>ROI Impact:</strong><br>
+                With <span class="savings" id="capturedBookings">20</span> bookings/month captured, Premium pays for itself in <span class="savings" id="roiMonths">4</span> months
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function calculate() {
+            // Get inputs
+            const missedCalls = parseFloat(document.getElementById('missedCalls').value) || 0;
+            const serviceValue = parseFloat(document.getElementById('serviceValue').value) || 0;
+            const conversionRate = parseFloat(document.getElementById('conversionRate').value) || 0;
+            
+            // Calculate monthly metrics
+            const monthlyMissedCalls = missedCalls * 4;
+            const potentialBookings = monthlyMissedCalls * (conversionRate / 100);
+            const monthlyLost = potentialBookings * serviceValue;
+            const annualLost = monthlyLost * 12;
+            
+            // Update ROI section
+            document.getElementById('totalMissedMonthly').textContent = monthlyMissedCalls.toFixed(0);
+            document.getElementById('lostBookings').textContent = potentialBookings.toFixed(0);
+            document.getElementById('lostRevenue').textContent = '$' + monthlyLost.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            document.getElementById('annualLost').textContent = '$' + annualLost.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            
+            // Calculate break-even
+            const premiumYear1 = 4661;
+            const noSetupYear1 = 5364;
+            
+            const premiumBookings = Math.ceil(premiumYear1 / serviceValue);
+            const noSetupBookings = Math.ceil(noSetupYear1 / serviceValue);
+            
+            document.getElementById('premiumBreakeven').textContent = premiumBookings + ' bookings';
+            document.getElementById('noSetupBreakeven').textContent = noSetupBookings + ' bookings';
+            
+            // Calculate months to break even
+            const premiumMonths = potentialBookings > 0 ? (premiumBookings / potentialBookings).toFixed(1) : 'N/A';
+            const noSetupMonths = potentialBookings > 0 ? (noSetupBookings / potentialBookings).toFixed(1) : 'N/A';
+            
+            document.getElementById('premiumMonths').textContent = premiumMonths + ' months';
+            document.getElementById('noSetupMonths').textContent = noSetupMonths + ' months';
+            
+            // Update savings comparisons
+            const premiumYear2 = 4164;
+            const noSetupYear2 = 5364;
+            document.getElementById('premiumVsNoSetup').textContent = '$' + (noSetupYear1 - premiumYear1).toFixed(0);
+            document.getElementById('premiumVsNoSetupY2').textContent = '$' + (noSetupYear2 - premiumYear2).toFixed(0);
+            
+            // Update ROI impact
+            document.getElementById('capturedBookings').textContent = potentialBookings.toFixed(0);
+            document.getElementById('roiMonths').textContent = premiumMonths;
+        }
+        
+        // Add event listeners
+        document.getElementById('missedCalls').addEventListener('input', calculate);
+        document.getElementById('serviceValue').addEventListener('input', calculate);
+        document.getElementById('conversionRate').addEventListener('input', calculate);
+        
+        // Initial calculation
+        calculate();
+    </script>
+</body>
+</html>
